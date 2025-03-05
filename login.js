@@ -1,23 +1,18 @@
 document.getElementById("login-form").addEventListener("submit", function(e) {
-    e.preventDefault(); // Prevent Default Form Submission
+    e.preventDefault(); // デフォルトのフォーム送信を防ぐ
 
-    // Validation Code
-    //if (document.getElementById("username").value == )
-
-
-    // Send the form data to the server
     let formData = new FormData(this);
-    fetch("login.php", {method: "POST", body: formData})
-    .then(response => response.text())
+    fetch("login.php", { method: "POST", body: formData })
+    .then(response => response.json())  // JSON 形式で受け取る
     .then(data => {
-        // Page Redirect when Login is Successful
-        if (data == "success") {
+        if (data.status === "success") {
             window.location.href = "dashboard.php";
         } else {
-            alert("Login failed: " + data);
+            document.getElementById("error-message").textContent = data.message;
         }
     })
     .catch(error => {
         console.error("Error: ", error);
+        document.getElementById("error-message").textContent = "Login request failed.";
     });
 });
